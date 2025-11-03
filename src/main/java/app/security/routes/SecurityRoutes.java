@@ -2,9 +2,9 @@ package app.security.routes;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import dat.utils.Utils;
-import dat.security.controllers.SecurityController;
-import dat.security.enums.Role;
+import app.utils.Utils;
+import app.security.controllers.SecurityController;
+import app.security.enums.Role;
 import io.javalin.apibuilder.EndpointGroup;
 
 import static io.javalin.apibuilder.ApiBuilder.*;

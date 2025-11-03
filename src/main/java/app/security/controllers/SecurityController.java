@@ -11,6 +11,7 @@ import app.security.entities.User;
 import app.security.exceptions.ApiException;
 import app.security.exceptions.NotAuthorizedException;
 import app.security.exceptions.ValidationException;
+import com.nimbusds.jose.JOSEException;
 import dk.bugelhartmann.ITokenSecurity;
 import dk.bugelhartmann.TokenSecurity;
 import dk.bugelhartmann.UserDTO;
@@ -63,7 +64,7 @@ public class SecurityController implements ISecurityController {
                         .put("token", token)
                         .put("username", verifiedUser.getUsername()));
 
-            } catch (EntityNotFoundException | ValidationException e) {
+            } catch (EntityNotFoundException e) {
                 ctx.status(401);
                 System.out.println(e.getMessage());
                 ctx.json(returnObject.put("msg", e.getMessage()));
