@@ -7,6 +7,7 @@ import app.entities.Category;
 import app.exceptions.ApiException;
 import app.exceptions.IllegalInputException;
 import app.services.Converters;
+import app.services.SkillStatsService;
 import io.javalin.http.Handler;
 import io.javalin.http.HttpStatus;
 import io.javalin.validation.BodyValidator;
@@ -48,6 +49,7 @@ public class CandidateController implements IController {
             int id = validateAndParseId(ctx.pathParam("id"));
             try {
                 Candidate candidate = candidateDAO.getById(id);
+                candidate = new SkillStatsService().getSkillStatsForCandidate(candidate); //Getting the skillStats from API
                 ctx.status(HttpStatus.OK).json(new CandidateDTO(candidate));
             } catch(NoResultException ex){
                 throw new ApiException(404, "No candidate with id: " + id);

@@ -20,6 +20,14 @@ public class Skill {
     private String name;
     private Category category;
     private String description;
+
+    @Transient
+    @Setter//Gem ikke i db
+    private Integer popularityScore;
+    @Transient
+    @Setter
+    private Integer averageSalary;
+
     @ManyToMany (mappedBy = "skills", fetch = FetchType.EAGER)
     @ToString.Exclude
     @EqualsAndHashCode.Exclude

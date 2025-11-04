@@ -32,12 +32,14 @@ public class Populator {
                 Skill react = new Skill("React", Category.FRONTEND, "Modern React + TypeScript development");
                 Skill docker = new Skill("Docker", Category.DEVOPS, "Containerization & deployment experience");
                 Skill sql = new Skill("SQL", Category.DB, "Strong database modelling & query optimization");
+                Skill figma = new Skill("Figma", Category.FRONTEND,"Colorful");
 
                 skillDAO.create(java);
                 skillDAO.create(python);
                 skillDAO.create(react);
                 skillDAO.create(docker);
                 skillDAO.create(sql);
+                skillDAO.create(figma);
 
                 Candidate marie = Candidate.builder()
                         .name("Marie")
@@ -46,8 +48,9 @@ public class Populator {
                         .build();
 
                 marie.addSkill(react);
-                marie.addSkill(sql);
+                marie.addSkill(java);
                 marie.addSkill(docker);
+                marie.addSkill(figma);
 
                 Candidate tim = Candidate.builder()
                         .name("Tim")

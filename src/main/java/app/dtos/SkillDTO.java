@@ -2,6 +2,7 @@ package app.dtos;
 
 import app.entities.Category;
 import app.entities.Skill;
+import jakarta.persistence.Transient;
 import lombok.*;
 
 import java.util.Set;
@@ -17,6 +18,10 @@ public class SkillDTO {
     private Category category;
     private String description;
 
+    private Integer popularityScore;
+    private Integer averageSalary;
+
+
     private Set<Integer> candidateIds;
 
     public SkillDTO(Skill skill) {
@@ -24,6 +29,9 @@ public class SkillDTO {
         this.name = skill.getName();
         this.category = skill.getCategory();
         this.description = skill.getDescription();
+
+        this.popularityScore = skill.getPopularityScore();
+        this.averageSalary = skill.getAverageSalary();
 
         if (skill.getCandidates() != null) {
             this.candidateIds = skill.getCandidates()

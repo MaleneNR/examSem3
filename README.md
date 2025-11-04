@@ -13,13 +13,16 @@ Here you can get an overview over how much of the api that is working:
 | 7  |       |
 | 8  |       |
 
-Working routes:
-| Routes | Functionality |
-|--------|---------------|
-|        |               |
-|        |               |
-|        |               |
-|        |               |
-|        |               |
-|        |               |
+Working routes for this specific api:
+| Routes           | Functionality                 |
+|------------------|-------------------------------|
+| /populate        | Create (/populate) entities in|
+| /candidates      | Get all candidates            |
+| /candidates/{id} | Get specific candidates by id |
+| /candidates?category={category}                 | Get all candidate for specific category                              |
+|                  |                               |
+|                  |                               |
+|                  |                               |
+|                  |                               |
+
 
