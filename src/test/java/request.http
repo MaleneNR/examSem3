@@ -1,0 +1,50 @@
+
+GET http://localhost:7007/api/populate
+
+### GET all candidates
+GET http://localhost:7007/api/candidates
+Accept: application/json
+
+###
+
+### GET candidate by ID (including skills and market data)
+GET http://localhost:7007/api/candidates/1
+Accept: application/json
+
+###
+
+### POST create a new candidate
+POST http://localhost:7007/api/candidates
+Content-Type: application/json
+Accept: application/json
+
+{
+  "name": "Sofie Andersen",
+  "phone": "24681012",
+  "educationBackground": "Software Engineering"
+}
+
+###
+
+### PUT update an existing candidate
+PUT http://localhost:7007/api/candidates/1
+Content-Type: application/json
+Accept: application/json
+
+{
+  "name": "Sofie A. Andersen",
+  "phone": "24681012",
+  "educationBackground": "Computer Science"
+}
+
+###
+
+### DELETE a candidate by ID
+DELETE http://localhost:7007/api/candidates/1
+Accept: application/json
+
+###
+
+### PUT link an existing skill to a candidate
+PUT http://localhost:7007/api/candidates/1/skills/3
+Accept: application/json

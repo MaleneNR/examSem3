@@ -6,7 +6,7 @@ import lombok.ToString;
 @Getter
 @ToString
 public class SkillStatsDTO {
-    private Integer id;
+    private String id;
     private String slug;
     private String name;
     private String categoryKey;
