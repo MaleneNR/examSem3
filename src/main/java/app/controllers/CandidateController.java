@@ -1,9 +1,11 @@
 package app.controllers;
 
 import app.daos.CandidateDAO;
+import app.daos.SkillDAO;
 import app.dtos.CandidateDTO;
 import app.entities.Candidate;
 import app.entities.Category;
+import app.entities.Skill;
 import app.exceptions.ApiException;
 import app.exceptions.IllegalInputException;
 import app.services.Converters;
@@ -12,10 +14,12 @@ import io.javalin.http.Handler;
 import io.javalin.http.HttpStatus;
 import io.javalin.validation.BodyValidator;
 import jakarta.persistence.Converter;
+import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.NoResultException;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class CandidateController implements IController {
@@ -113,6 +117,40 @@ public class CandidateController implements IController {
             ctx.status(200).json(CandidateDTO.getEntities(candidatesSorted));
         };
     }
+    public Handler linkSkillToCandidate = ctx -> {
+        int candidateId = validateAndParseId(ctx.pathParam("candidateId"));
+        int skillId = validateAndParseId(ctx.pathParam("skillId"));
+
+        try (EntityManager em = emf.createEntityManager()) {
+            CandidateDAO candidateDAO = new CandidateDAO(emf);
+            SkillDAO skillDAO = new SkillDAO(emf);
+
+            Candidate candidate = candidateDAO.getById(candidateId);
+            Skill skill = skillDAO.getById(skillId);
+
+            if (candidate == null || skill == null) {
+                ctx.status(404).json("Candidate or Skill not found");
+                return;
+            }
+
+            em.getTransaction().begin();
+            candidate.addSkill(skill);
+            em.merge(candidate);
+            em.getTransaction().commit();
+
+            //
+            ctx.status(200).json(Map.of(
+                    "message", "Skill er nu linket til candidate",
+                    "candidateId", candidateId,
+                    "skillId", skillId
+            ));
+        } catch (Exception e) {
+            e.printStackTrace();
+            ctx.status(500).json(Map.of("error","could not link skill to candicate"));
+        }
+    };
+
+    //------------Validation--------------
 
     private int validateAndParseId(String idStr){
         if(idStr ==null || idStr.isEmpty()){
@@ -131,4 +169,6 @@ public class CandidateController implements IController {
         }
         return id;
     }
+
+
 }

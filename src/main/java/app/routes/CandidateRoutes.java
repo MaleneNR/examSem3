@@ -17,12 +17,12 @@ public class CandidateRoutes { private EntityManagerFactory emf;
 
     public EndpointGroup getRoutes(){
         return () -> {
-            get("/", candidateController.getAllAndByCategory());
-            get("/{id}", candidateController.getById()); //TODO SHOULD INCLUDE SKILLS
-            post("/", candidateController.create());
-            put("/{id}", candidateController.update());
-            delete("/{id}", candidateController.delete());
-            //put("/{candidateId}/skills/{skillId}", ); //TODO SKAL LAVES OM TIL EGEN FUNKTION
+            get("/", candidateController.getAllAndByCategory());                //role.anyone
+            get("/{id}", candidateController.getById()); //include skills       //role.user
+            post("/", candidateController.create());                            //role.admin
+            put("/{id}", candidateController.update());                         //role.admin
+            delete("/{id}", candidateController.delete());                      //role.admin
+            put("/{candidateId}/skills/{skillId}", candidateController.linkSkillToCandidate); //role.admin
         };
     }
 }
