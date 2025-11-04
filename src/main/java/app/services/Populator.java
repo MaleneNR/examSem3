@@ -33,8 +33,11 @@ public class Populator {
                 Skill docker = new Skill("Docker", Category.DEVOPS, "Containerization & deployment experience");
                 Skill sql = new Skill("SQL", Category.DB, "Strong database modelling & query optimization");
 
-                skillDAO.create(sql);
+                skillDAO.create(java);
+                skillDAO.create(python);
                 skillDAO.create(react);
+                skillDAO.create(docker);
+                skillDAO.create(sql);
 
                 Candidate marie = Candidate.builder()
                         .name("Marie")

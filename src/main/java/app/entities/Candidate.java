@@ -23,14 +23,21 @@ public class Candidate {
     private String name;
     private String phone;
     private String educationBackground;
-    @ManyToMany
+    @ManyToMany (fetch = FetchType.EAGER) //We want skills to be fetch fast and everytime = eager
     @JoinTable (name = "CandidateSkill")
     private Set<Skill> skills = new HashSet<>();
 
     //bi-directional
     public void addSkill(Skill skill) {
+        if(this.skills == null){
+            this.skills = new HashSet<>();
+        }
         this.skills.add(skill);
         skill.getCandidates().add(this);
+    }
+
+    public void setCandidateId(Integer id) {
+        this.candidateId = id;
     }
 
     //We could add a removeSkill(), but let's say they will always have the skill there have been added

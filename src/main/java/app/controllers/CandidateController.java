@@ -61,7 +61,7 @@ public class CandidateController implements IController {
             BodyValidator<CandidateDTO> validator = ctx.bodyValidator(CandidateDTO.class);
             validator.check(candidateDTO -> candidateDTO.getName() == null,"Trip must contain a name");
             CandidateDTO candidateDTO = ctx.bodyAsClass(CandidateDTO.class);
-            Candidate created = candidateDAO.create(converters.convertTripDTOToTrip(candidateDTO));
+            Candidate created = candidateDAO.create(converters.convertCandidateDTOToCandidate(candidateDTO));
             ctx.json(new CandidateDTO(created)).status(HttpStatus.CREATED);
         };
     }
@@ -74,8 +74,8 @@ public class CandidateController implements IController {
                 BodyValidator<CandidateDTO> validator = ctx.bodyValidator(CandidateDTO.class);
                 validator.check(candidateDTO -> candidateDTO.getName()==null, "Candidate must contain a name to be updated");
                 CandidateDTO candidateDTO = ctx.bodyAsClass(CandidateDTO.class);
-                candidateDTO.setTripId(id);
-                candidateDAO.update(converters.convertTripDTOToTrip(candidateDTO));
+                candidateDTO.setId(id);
+                candidateDAO.update(converters.convertCandidateDTOToCandidate(candidateDTO));
                 ctx.status(200).json(candidateDTO);}
             catch (Exception e){
                 e.getMessage();
@@ -94,7 +94,7 @@ public class CandidateController implements IController {
             if(found == null)
                 throw new ApiException(404, "No trip with that id: " + (id));
             CandidateDTO candidateDTO = new CandidateDTO(found);
-            candidateDAO.delete(candidateDTO.getTripId()); //Tidligere har denne brugt en convert
+            candidateDAO.delete(candidateDTO.getId()); //Tidligere har denne brugt en convert
             ctx.status(204);} catch (Exception e){
                 ctx.status(400).result("Candidate was not deleted");
             }
@@ -104,10 +104,11 @@ public class CandidateController implements IController {
 
     public Handler getByCategory(Category category) {
         return ctx -> {
-            List<Candidate> tripsSortedByCat = candidateDAO.getAll().stream()
-                    .filter(candidate -> candidate.getCategory().name().equalsIgnoreCase(category.name()))
+            List<Candidate> candidatesSorted = candidateDAO.getAll().stream()
+                    .filter(candidate -> candidate.getSkills().stream()
+                            .anyMatch(skill -> skill.getCategory().name().equals(category.name())))
                     .collect(Collectors.toList());
-            ctx.status(200).json(CandidateDTO.getEntities(tripsSortedByCat));
+            ctx.status(200).json(CandidateDTO.getEntities(candidatesSorted));
         };
     }
 

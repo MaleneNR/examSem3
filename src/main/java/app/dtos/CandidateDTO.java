@@ -3,6 +3,7 @@ package app.dtos;
 import app.entities.Candidate;
 import lombok.*;
 
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -29,6 +30,13 @@ public class CandidateDTO {
                     .map(skill -> new SkillDTO(skill))
                     .collect(Collectors.toSet());
         }
+    }
+    public static Set<CandidateDTO> getEntities(List<Candidate> candidates) {
+        return candidates.stream().map(candidate -> new CandidateDTO(candidate)).collect(Collectors.toSet());
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }
 

@@ -3,6 +3,7 @@ package app.entities;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.HashSet;
 import java.util.Set;
 @Getter
 @NoArgsConstructor
@@ -19,12 +20,18 @@ public class Skill {
     private String name;
     private Category category;
     private String description;
-    @ManyToMany (mappedBy = "skills")
-    private Set<Candidate> candidates;
+    @ManyToMany (mappedBy = "skills", fetch = FetchType.EAGER)
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    private Set<Candidate> candidates = new HashSet<>();
 
     public Skill(String name, Category category, String description) {
         this.name = name;
         this.category = category;
         this.description = description;
+    }
+
+    public void setCandidates(Set<Candidate> candidates) {
+        this.candidates = candidates;
     }
 }
