@@ -33,11 +33,23 @@ public class Candidate {
             this.skills = new HashSet<>();
         }
         this.skills.add(skill);
+
+        if (skill.getCandidates() == null) {
+            skill.setCandidates(new HashSet<>());
+        }
         skill.getCandidates().add(this);
     }
 
     public void setCandidateId(Integer id) {
         this.candidateId = id;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setEducationBackground(String educationBackground) {
+        this.educationBackground = educationBackground;
     }
 
     //We could add a removeSkill(), but let's say they will always have the skill there have been added

@@ -2,6 +2,7 @@ import app.config.ApplicationConfig;
 import app.config.HibernateConfig;
 import app.daos.CandidateDAO;
 import app.dtos.CandidateDTO;
+import app.dtos.SkillDTO;
 import app.entities.Candidate;
 import app.entities.Category;
 import app.entities.Skill;
@@ -12,6 +13,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import org.junit.jupiter.api.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -105,5 +107,80 @@ public class APITest {
 
         assertThat(candidates.size(), is(2));
         assertThat(candidates.get(0).getName(), anyOf(is("Marie"), is("Tim")));
+    }
+
+    @Test
+    void getCandidateById_shouldReturnCandidateWithSkills() {
+        CandidateDTO dto =
+                given()
+                        .when()
+                        .get(BASE_URL + "/candidates/" + candidate1.getCandidateId())
+                        .then()
+                        .statusCode(200)
+                        .body("name", is("Marie"))
+                        .body("skills.size()", is(2))
+                        .extract()
+                        .as(CandidateDTO.class);
+
+        List<SkillDTO> skills = new ArrayList<>(dto.getSkills());
+        assertThat(skills.size(), is(2));
+        assertThat(
+                skills.stream().map(skillDTO -> skillDTO.getName()).toList(),
+                hasItems("Java", "React"));
+    }
+
+    @Test
+    void createCandidate_shouldReturnCreatedCandidate() {
+        CandidateDTO newCandidate = CandidateDTO.builder()
+                .name("Sofie")
+                .phone("12344321")
+                .educationBackground("Software Engineering")
+                .build();
+
+        CandidateDTO created =
+                given()
+                        .contentType("application/json")
+                        .body(newCandidate)
+                        .when()
+                        .post(BASE_URL + "/candidates")
+                        .then()
+                        .statusCode(201)
+                        .extract()
+                        .as(CandidateDTO.class);
+
+        assertThat(created.getName(), is("Sofie"));
+    }
+
+    @Test
+    void updateCandidate_shouldReturnUpdatedData() {
+        CandidateDTO updated =
+                given()
+                        .contentType("application/json")
+                        .body("""
+                            {
+                              "name": "Marie updated:)",
+                              "phone": "888",
+                              "educationBackground": "Updated Background"
+                            }
+                            """)
+                        .when()
+                        .put(BASE_URL + "/candidates/" + candidate1.getCandidateId())
+                        .then()
+                        .statusCode(200)
+                        .extract()
+                        .as(CandidateDTO.class);
+
+        assertThat(updated.getName(), is("Marie updated:)"));
+        assertThat(updated.getPhone(), is("888"));
+        assertThat(updated.getEducationBackground(), is("Updated Background"));
+    }
+
+    @Test
+    void deleteCandidate_shouldReturn200() {
+        given()
+                .when()
+                .delete(BASE_URL + "/candidates/" + candidate2.getCandidateId())
+                .then()
+                .statusCode(204);
     }
 }
